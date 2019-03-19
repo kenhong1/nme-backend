@@ -36,16 +36,16 @@ router.post("/pilots", (req, res) => {
 
 
 //PUT /pilots/:id = Update one Pilot
-router.put("/pilots/:id", (req, res) => {
-   Pilot.findByIdAndUpdate(req.params.id, {$set: {
-      name:req.body.name,
-      callSign: req.body.callSign
-   }}, (err, pilot) => {
-      pilot.save( () => {
-         res.json(pilot)
-      })
-   })
-})
+// router.put("/pilots/:id", (req, res) => {
+//    Pilot.findByIdAndUpdate(req.params.id, {$set: {
+//       name:req.body.name,
+//       callSign: req.body.callSign
+//    }}, (err, pilot) => {
+//       pilot.save( () => {
+//          res.json(pilot)
+//       })
+//    })
+// })
 
 
 //PUT /pilots/:id = update one pilot
@@ -75,45 +75,28 @@ router.get("/pilots/:pid/drones", (req, res) => {
 
 
 //GET /pilots/:pid/drones/:did = Get ONE drone assoacited with a pilot 
-router.get("/pilots/:pid/drones/:did", (req, res) => {
-   Pilot.findById(req.params.pid).populate("drones").exec((err, drone) => {
-      res.json(drone.name)
-   });
-});
-
-
-//POST /pilots/:pid/drones = Create a new drone for that pilot 
-router.post("/pilots/:pid/drones", (req, res) => {
-   let drone = new Drone ({
-      name:req.body.name,
-      region:req.body.region
-   });
-   drone.save((err, drone) => {
-      Pilot.findById(req.params.pid, (err, pilot) => {
-         pilot.drones.push(drone)
-         res.json(pilot)
-      });
+router.get("./pilots/:pid/drones:/did", (req, res) => {
+   Drone.findById(req.params.did, (err, drone) => {
+      res.status(200).json(drone)
    });
 }); 
 
 
+//POST /pilots/:pid/drones = Create a new drone for that pilot 
 router.post("/pilots/:pid/drones", (req, res) => {
-   Pilot.findById(req.params.pid).populate("drones").exec((err, pilot) => {
-      let drone = new Drone ({
+   Pilot.findById(parseInt(req.params.qid), (err, pilot) => {
+      let newDrone = new Drone ({
          name: req.body.name,
          region: req.body.region
-      })
-      drone.save((err, newDrone) => {
-         pilot.drones.push(newDrone)
+      });
+      newDrone.Save((err, drone) => {
+         pilot.drones.push(drone);
          pilot.save((err, pilot) => {
-            res.status(201).json(newDrone);
+            res.status(200).json(pilot)
          });
       });
-   });
+   }) ;
 });
-
-
-
 
 
 
