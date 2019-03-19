@@ -48,6 +48,23 @@ router.put("/pilots/:id", (req, res) => {
 })
 
 
+//PUT /pilots/:id = update one pilot
+router.put("/pilots/:id", (req, res) => {
+   Pilot.findByIdAndUpdate(req.params.id, {
+      name:req.body.name,
+      callSign:req.body.callSign
+   },  {
+      new: true
+   }, (err, pilot) => {
+      res.status(203).json(pilot)
+   });
+});
+
+
+// req.body: holds your form Data
+// req.params: holds your route data. 
+
+
 //GET /pilots/:pid/drones = Get all drones asscoaited with a given pilot 
 router.get("/pilots/:pid/drones", (req, res) => {
    Pilot.findById(req.params.pid).populate("drones").exec((err, pilot)=> {
@@ -61,8 +78,8 @@ router.get("/pilots/:pid/drones", (req, res) => {
 router.get("/pilots/:pid/drones/:did", (req, res) => {
    Pilot.findById(req.params.pid).populate("drones").exec((err, drone) => {
       res.json(drone.name)
-   })
-})
+   });
+});
 
 
 //POST /pilots/:pid/drones = Create a new drone for that pilot 
@@ -75,8 +92,8 @@ router.post("/pilots/:pid/drones", (req, res) => {
       Pilot.findById(req.params.pid, (err, pilot) => {
          pilot.drones.push(drone)
          res.json(pilot)
-      })
-   })
+      });
+   });
 }); 
 
 
@@ -90,10 +107,10 @@ router.post("/pilots/:pid/drones", (req, res) => {
          pilot.drones.push(newDrone)
          pilot.save((err, pilot) => {
             res.status(201).json(newDrone);
-         })
-      })
-   })
-})
+         });
+      });
+   });
+});
 
 
 
