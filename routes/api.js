@@ -84,18 +84,19 @@ router.get("./pilots/:pid/drones:/did", (req, res) => {
 
 //POST /pilots/:pid/drones = Create a new drone for that pilot 
 router.post("/pilots/:pid/drones", (req, res) => {
-   Pilot.findById(parseInt(req.params.qid), (err, pilot) => {
+   Pilot.findById(req.params.pid, (err, pilot) => {
+      console.log(err)
       let newDrone = new Drone ({
          name: req.body.name,
          region: req.body.region
       });
-      newDrone.Save((err, drone) => {
+      newDrone.save((err, drone) => {
          pilot.drones.push(drone);
          pilot.save((err, pilot) => {
             res.status(200).json(pilot)
          });
       });
-   }) ;
+   });
 });
 
 
