@@ -16,7 +16,7 @@ router.get("/pilots", (req, res) => {
 
 //Get /pilots/:id = Get one pilot
 router.get("/pilots/:id", (req, res) => {
-   Pilot.findById(req.params.id, (err, pilot) => {
+   Pilot.findById(req.params.id).populate("drones").exec((err, pilot) => {
       res.json(pilot)
    });
 });

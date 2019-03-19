@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import PilotList from "./PilotList"
+
+import PilotDetail from "./PilotDetail"
 import './App.css';
+import axios from "axios"
 
 class App extends Component {
 
@@ -12,16 +15,46 @@ class App extends Component {
       currentDrone: {},
       loading: false 
     }
+    this.selectPilot = this.selectPilot.bind(this) 
+  }
+
+  selectPilot(pilotId){
+    console.log("clicking")
+    axios.get(`/api/pilots/${pilotId}`)
+      .then(res => {
+        this.setState({
+          currentPilot: res.data 
+      })
+    })
+  }
+
+  selectDrone(done){
+    console.log("drone detail click")
+    this.setState({
+      currentDrone: drones
+    })
   }
 
 
+
+
+  componentDidMount(){
+    axios.get("/api/pilots")
+    .then(res => {
+      this.setState({
+        pilots: res.data 
+      })
+    })
+  }
+
   render() {
-    return (
+      return (
       <div className="App">
-      
-        
+          <PilotList pilots={this.state.pilots} selectPilot={this.selectPilot}/> 
+          <PilotDetail pilot={this.state.currentPilot} />
+
       </div>
-    );
+    )
   }
 }
 
